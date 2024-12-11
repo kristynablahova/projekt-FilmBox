@@ -287,32 +287,43 @@ document.querySelector("#note-form").addEventListener("submit", (e) => {
 	}
 	})
 
-//bod číslo 9
+//bod číslo 9 není dodělaný bonus
 
 document.querySelector("#prehravac").addEventListener("click", (e) => {
-	const filmElement = document.querySelector("video")
-	filmElement.play()
+	const video = document.querySelector("video")
+	const prehravac = document.querySelector("#prehravac")
+	const pauseButton = prehravac.querySelector(".pause")
+	const playButton = prehravac.querySelector(".play")
+	const currentTimeElement = document.querySelector(".current-time")
+
+	playButton.addEventListener("click", () => {
+        video.play()
+    })
+
+	video.addEventListener("playing", (e) => {
+		prehravac.classList.add("playing")
+	})
+
+    pauseButton.addEventListener("click", (e) => {
+	video.pause()
+	})
+
+	video.addEventListener("pause", (e) => {
+		prehravac.classList.remove("playing")
+	})
+
+	video.addEventListener("timeupdate", (e) => {
+		const currentTime = video.currentTime
+		const minutes = Math.floor(currentTime / 60)
+		const seconds = Math.floor(currentTime % 60)
+		const formatedTime = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`
+
+        currentTimeElement.textContent = formatedTime
+	})
 })
 
 
-
 /*
-
-Přidejte na <video> posluchač události playing. Ta nastává v okamžiku, kdy se video začíná přehrávat.
-
-Při události na prvku s id prehravac přidejte třídu playing. Předchystané CSS v takovém případě zařídí, že se přehrávací tlačítko skryje a místo něho se objeví tlačítko pro pozastavení.
-
-Tlačítku .pause přidejte posluchač, který po kliknutí zavolá na videu metodu .pause(), což pozastaví přehrávání.
-
-Poslouchejte na událost s názvem pause. Pokud nastane, odeberte z přehrávače třídu playing.
-
-V prvku se třídou current-time zobrazujte aktuální čas přehrávaného videa.
-
-Poslouchejte na prvku videa událost timeupdate. Pokud nastane, vyčtěte z videa přes vlastnost .currentTime počet přehraných sekund.
-
-Aktuální čas zaokrouhlete a převeďte zvlášť na minuty a sekundy.
-
-Obě hodnoty oddělené dvojtečkou vypište do prvku .current-time.
 
 Bonus
 
