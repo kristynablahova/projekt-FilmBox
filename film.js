@@ -103,4 +103,232 @@ const filmy = [
 			'Na zámek v podhůří Krkonoš přijíždí jeho nový majitel Štěpán se svojí snoubenkou, krásnou komtesou Blankou, a mladším bratrem Adamem. Cestou kočár nešťastně srazí kolemjdoucí dívku, Adam jí pomůže a ona se do něj zamiluje. Na zámku Adam objeví starou vlašskou knihu, která by měla obsahovat cestu k pokladům. Tajemné značky vlašské knihy však nedokáže vyluštit ani národopisec Jiráček, který v kraji sbírá pověsti a nevychází z údivu nad tím, že zdejší lidé stále věří v Krakonoše. Na zámku se objeví záhadný cizinec a nabídne Štěpánovi, že jej k pokladu za určitých podmínek dovede. Výprava do hor může začít. Naplní se Liduščina láska k Adamovi? Jakou záhadu skrývá starý obraz na zámku Hůrka a co strašlivého se v horách kdysi odehrálo? A kdo je vlastně Krakonoš a jaké je jeho největší tajemství? (csfd.cz, Česká televize)',
 		premiera: '2022-12-24',
 	},
+	{
+		id: 'zelena-mile',
+		nazev: 'Zelená míle',
+		plakat: {
+			url: 'https://image.pmgstatic.com/cache/resized/w360/files/images/film/posters/000/073/73224_ac1b7n.jpg',
+			sirka: 401,
+			vyska: 650,
+		},
+		ochutnavka: 'Americké drama zpracované podle knihy Stephena Kinga.',
+		popis:
+			'Paul Edgecomb se vrací ve vzpomínkách do roku 1935, kdy byl zaměstnán v louisianské věznici jako hlavní dozorce. Tenkrát se tam setkal s výjimečným, byť duchem prostým mužem, který byl obdařen nejen velkým srdcem, ale také nadpozemskými schopnostmi. Byl to John Coffey, neprávem odsouzený na smrt za vraždu dvou malých holčiček. V té době trpěl Paul těžkým zánětem močového měchýře a také neměl šanci zbavit se sadistického, všemi nenáviděného dozorce Percyho. Jednoho dne chce s Paulem mluvit Coffey. Když se k němu přiblíží, chytí ho rukou v rozkroku, pak šokovaného Paula pustí a on uvidí, jak černoch vypustil z úst černý oblak, a současně si uvědomí, že jeho bolestivý zánět zmizel. Coffey má zvláštní schopnost, díky které vyléčí ženu správce věznice, ke které ho tajně v noci převezou, dokonce oživí cvičenou myš jednoho vězně, kterou zabil zlomyslný Percy. John Coffey, kterého čeká smrt, přijímá svůj úděl odevzdaně a bez hořkosti. (csfd.cz)',
+		premiera: '1999-12-10',
+	},
 ]
+
+//bod číslo 5 a 6, extra bonus chybí
+//vypis detailu filmu podle id + prace s knihovnou dayjs
+
+const filmID = window.location.hash.slice(1)
+
+const currentFilm = filmy.find((film) => film.id === filmID)
+
+const mainElement = document.querySelector("#detail-filmu")
+
+mainElement.innerHTML = `
+<div class="container-lg mt-5">
+			<div class="card mb-3" id="detail-filmu">
+				<div class="row g-0">
+					<div class="col-md-5">
+						<img
+							src="${currentFilm.plakat.url}"
+							alt="plakát"
+							class="img-fluid rounded-start"
+							width="${currentFilm.plakat.sirka}"
+							height="${currentFilm.plakat.vyska}"
+						/>
+					</div>
+					<div class="col-md-7">
+						<div class="card-body">
+							<h5 class="card-title">${currentFilm.nazev}</h5>
+							<p class="card-text">${currentFilm.popis}</p>
+							<p class="card-text">
+								<small class="text-muted" id="premiera">Premiéra <strong>${dayjs(currentFilm.premiera).format("DD.MM.YYYY")}</strong>, což bylo před ${Math.abs(dayjs(currentFilm.premiera).diff(dayjs(), 'days'))} dny.</small
+								>
+							</p>
+							<h6>Hodnocení</h6>
+							<div class="stars">
+								<button
+									class="far fa-star button-star"
+									data-mdb-toggle="tooltip"
+									title="Nic moc"
+								>
+									1
+								</button>
+								<button
+									class="far fa-star button-star"
+									data-mdb-toggle="tooltip"
+									title="Ucházející"
+								>
+									2
+								</button>
+								<button
+									class="far fa-star button-star"
+									data-mdb-toggle="tooltip"
+									title="Dobrý"
+								>
+									3
+								</button>
+								<button
+									class="far fa-star button-star"
+									data-mdb-toggle="tooltip"
+									title="Skvělý"
+								>
+									4
+								</button>
+								<button
+									class="far fa-star button-star"
+									data-mdb-toggle="tooltip"
+									title="Úžasný"
+								>
+									5
+								</button>
+							</div>
+
+							<h6 class="mt-4">Poznámka</h6>
+							<form id="note-form">
+								<div class="row">
+									<div class="col-md-6 col-lg-7 col-xl-8 mb-2">
+										<div class="form-outline">
+											<textarea
+												class="form-control"
+												id="message-input"
+												rows="4"
+											></textarea>
+											<label class="form-label" for="message-input"
+												>Text poznámky</label
+											>
+										</div>
+									</div>
+									<div class="col-md-6 col-lg-5 col-xl-4">
+										<div class="form-check d-flex justify-content-center mb-2">
+											<input
+												class="form-check-input me-2 mb-2"
+												type="checkbox"
+												value=""
+												id="terms-checkbox"
+											/>
+											<label class="form-check-label" for="terms-checkbox">
+												Souhlasím se všeobecnými podmínky užívání.
+											</label>
+										</div>
+										<button type="submit" class="btn btn-primary btn-block">
+											Uložit
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+							
+		`
+//bod číslo 7
+//hodnoceni pomoci hvezdicek
+
+const highlightStars = (number) => {
+	const stars = document.querySelectorAll(".fa-star")
+
+	stars.forEach((star, index) => {
+		if (index < number) {
+			star.classList.remove("far")
+			star.classList.add("fas")
+		} else {
+			star.classList.remove("fas")
+			star.classList.add("far")
+		}
+	})
+}
+
+document.querySelectorAll(".fa-star").forEach(star => {
+	star.addEventListener("click", (e) => {
+		const starValue = e.target.textContent
+
+		highlightStars(starValue)
+	})
+
+	star.addEventListener("mouseenter", (e) => {
+		const starValue = e.target.textContent
+
+		highlightStars(starValue)
+	})
+
+	star.addEventListener("mouseleave", (e) => {
+		const selectedValue = document.querySelector(".fa-star.fas")
+		const starValue = selectedValue ? e.target.textContent : 0
+
+		highlightStars(starValue)
+	})
+	
+})
+
+
+//bod číslo 8
+//pridani komentare
+
+document.querySelector("#note-form").addEventListener("submit", (e) => {
+	e.preventDefault()
+		
+	const messageInput = document.querySelector("#message-input")
+	const checkbox = document.querySelector("#terms-checkbox")
+	const note = document.querySelector("#note-form")
+
+	if (messageInput.value === "") {
+		messageInput.classList.add("is-invalid")
+		messageInput.focus()
+	} else if (!checkbox.checked) {
+		checkbox.classList.add("is-invalid")
+		checkbox.focus()
+	} else {
+		note.innerHTML = `<p class="card-text">${messageInput.value}</p>`
+	}
+	})
+
+//bod číslo 9
+
+document.querySelector("#prehravac").addEventListener("click", (e) => {
+	const filmElement = document.querySelector("video")
+	filmElement.play()
+})
+
+
+
+/*
+
+Přidejte na <video> posluchač události playing. Ta nastává v okamžiku, kdy se video začíná přehrávat.
+
+Při události na prvku s id prehravac přidejte třídu playing. Předchystané CSS v takovém případě zařídí, že se přehrávací tlačítko skryje a místo něho se objeví tlačítko pro pozastavení.
+
+Tlačítku .pause přidejte posluchač, který po kliknutí zavolá na videu metodu .pause(), což pozastaví přehrávání.
+
+Poslouchejte na událost s názvem pause. Pokud nastane, odeberte z přehrávače třídu playing.
+
+V prvku se třídou current-time zobrazujte aktuální čas přehrávaného videa.
+
+Poslouchejte na prvku videa událost timeupdate. Pokud nastane, vyčtěte z videa přes vlastnost .currentTime počet přehraných sekund.
+
+Aktuální čas zaokrouhlete a převeďte zvlášť na minuty a sekundy.
+
+Obě hodnoty oddělené dvojtečkou vypište do prvku .current-time.
+
+Bonus
+
+Spusťte/pozastavte přehrávání, pokud uživatel na stránce zmáčkne klávesu mezerník.
+
+Všimněte si, že video se pozastavuje a přehrává, když uživatel píše do formuláře pro poznámku text a dělá u toho mezery. Spusťte/pozastavte přehrávání pouze v případě, že uživatel nebyl ve formuláři, když mačkal mezerník.
+
+if (
+event.code === 'Space' &&
+event.target.tagName !== 'TEXTAREA' &&
+event.target.tagName !== 'INPUT' &&
+event.target.tagName !== 'BUTTON'
+) {
+// …
+}
+
+Extra bonus
+Skryjte ovládací panel, pokud uživatel po dobu tří sekund nepohnul myší ani nestiskl žádnou klávesu. Využijte časovač. S každým pohnutím nebo stiskem ho zrušte a nastavte znovu na tři sekundy. Po uplynutí přidejte prvku .player-controls třídu hidden. Pro opětovné zobrazení (s každým pohybem, stiskem) třídu hidden zase odeberte, aby se ovládání zpět objevilo.
+*/
