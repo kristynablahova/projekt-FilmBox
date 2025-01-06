@@ -118,114 +118,59 @@ const filmy = [
 	},
 ]
 
-//bod číslo 5 a 6, extra bonus chybí
+//bod číslo 5 a 6
 //vypis detailu filmu podle id + prace s knihovnou dayjs
 
+
 const filmID = window.location.hash.slice(1)
-
 const currentFilm = filmy.find((film) => film.id === filmID)
-
 const mainElement = document.querySelector("#detail-filmu")
 
-mainElement.innerHTML = `
-<div class="container-lg mt-5">
-			<div class="card mb-3" id="detail-filmu">
-				<div class="row g-0">
-					<div class="col-md-5">
-						<img
-							src="${currentFilm.plakat.url}"
-							alt="plakát"
-							class="img-fluid rounded-start"
-							width="${currentFilm.plakat.sirka}"
-							height="${currentFilm.plakat.vyska}"
-						/>
-					</div>
-					<div class="col-md-7">
-						<div class="card-body">
-							<h5 class="card-title">${currentFilm.nazev}</h5>
-							<p class="card-text">${currentFilm.popis}</p>
-							<p class="card-text">
-								<small class="text-muted" id="premiera">Premiéra <strong>${dayjs(currentFilm.premiera).format("DD.MM.YYYY")}</strong>, což bylo před ${Math.abs(dayjs(currentFilm.premiera).diff(dayjs(), 'days'))} dny.</small
-								>
-							</p>
-							<h6>Hodnocení</h6>
-							<div class="stars">
-								<button
-									class="far fa-star button-star"
-									data-mdb-toggle="tooltip"
-									title="Nic moc"
-								>
-									1
-								</button>
-								<button
-									class="far fa-star button-star"
-									data-mdb-toggle="tooltip"
-									title="Ucházející"
-								>
-									2
-								</button>
-								<button
-									class="far fa-star button-star"
-									data-mdb-toggle="tooltip"
-									title="Dobrý"
-								>
-									3
-								</button>
-								<button
-									class="far fa-star button-star"
-									data-mdb-toggle="tooltip"
-									title="Skvělý"
-								>
-									4
-								</button>
-								<button
-									class="far fa-star button-star"
-									data-mdb-toggle="tooltip"
-									title="Úžasný"
-								>
-									5
-								</button>
-							</div>
+const premiereDate = currentFilm.premiera
 
-							<h6 class="mt-4">Poznámka</h6>
-							<form id="note-form">
-								<div class="row">
-									<div class="col-md-6 col-lg-7 col-xl-8 mb-2">
-										<div class="form-outline">
-											<textarea
-												class="form-control"
-												id="message-input"
-												rows="4"
-											></textarea>
-											<label class="form-label" for="message-input"
-												>Text poznámky</label
-											>
-										</div>
-									</div>
-									<div class="col-md-6 col-lg-5 col-xl-4">
-										<div class="form-check d-flex justify-content-center mb-2">
-											<input
-												class="form-check-input me-2 mb-2"
-												type="checkbox"
-												value=""
-												id="terms-checkbox"
-											/>
-											<label class="form-check-label" for="terms-checkbox">
-												Souhlasím se všeobecnými podmínky užívání.
-											</label>
-										</div>
-										<button type="submit" class="btn btn-primary btn-block">
-											Uložit
-										</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-							
-		`
+const inflectionFuture = (days) => {
+    	if (days === 1) {
+            return "den"
+        } else if (days >= 2 && days <= 4) {
+            return "dny"
+        } else {
+            return "dní"
+        }
+    }
+
+const inflectionPast = (days) => {
+        if (days === 1) {
+            return "dnem"
+        } else {
+            return "dny"
+        }
+    }
+
+const today = dayjs()
+const premiere = dayjs(premiereDate)
+const dayDifference = premiere.diff(today, 'days')
+const formattedPremiere = premiere.format('D. M. YYYY')
+const premiereElement = document.querySelector("#premiera")
+
+    
+if (dayDifference === 0) {
+	premiereElement.innerHTML = `Premiéra je dnes!`
+} else if (dayDifference < 0) {
+	premiereElement.innerHTML = `Premiéra byla před ${Math.abs(dayDifference)} ${inflectionPast(Math.abs(dayDifference))}.`
+} else {
+	premiereElement.innerHTML = `Premiéra bude za ${dayDifference} ${inflectionFuture(dayDifference)}.`
+}
+
+const filmPosterEl = document.querySelector("#detail-filmu img")
+const filmNameEl = document.querySelector("#detail-filmu .card-title")
+const filmDescriptionEl = document.querySelector("#detail-filmu .card-text")
+
+filmNameEl.textContent = `${currentFilm.nazev}`
+filmDescriptionEl.textContent = `${currentFilm.popis}` 
+filmPosterEl.src = `${currentFilm.plakat.url}`        
+premiereElement.innerHTML = `Premiéra <strong>${formattedPremiere}</strong>. ${premiereElement.textContent}`
+								
+
 //bod číslo 7
 //hodnoceni pomoci hvezdicek
 
@@ -243,24 +188,20 @@ const highlightStars = (number) => {
 	})
 }
 
-document.querySelectorAll(".fa-star").forEach(star => {
-	star.addEventListener("click", (e) => {
-		const starValue = e.target.textContent
+let currentRating = 0
 
-		highlightStars(starValue)
+document.querySelectorAll(".fa-star").forEach((star, index) => {
+	star.addEventListener("click", (e) => {
+		currentRating = index + 1
+		highlightStars(currentRating)
 	})
 
 	star.addEventListener("mouseenter", (e) => {
-		const starValue = e.target.textContent
-
-		highlightStars(starValue)
+		highlightStars(index + 1)
 	})
 
 	star.addEventListener("mouseleave", (e) => {
-		const selectedValue = document.querySelector(".fa-star.fas")
-		const starValue = selectedValue ? e.target.textContent : 0
-
-		highlightStars(starValue)
+		highlightStars(currentRating)
 	})
 	
 })
@@ -287,7 +228,7 @@ document.querySelector("#note-form").addEventListener("submit", (e) => {
 	}
 	})
 
-//bod číslo 9 není dodělaný bonus
+//bod číslo 9 přehrávač
 
 document.querySelector("#prehravac").addEventListener("click", (e) => {
 	const video = document.querySelector("video")
@@ -316,30 +257,21 @@ document.querySelector("#prehravac").addEventListener("click", (e) => {
 		const currentTime = video.currentTime
 		const minutes = Math.floor(currentTime / 60)
 		const seconds = Math.floor(currentTime % 60)
-		const formatedTime = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`
+		const formatedTime = `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`
 
         currentTimeElement.textContent = formatedTime
 	})
 })
 
+document.addEventListener("keydown", (e) => {
+    if (e.key === " " && !document.activeElement.matches("#message-input, textarea, input")) {
+        const video = document.querySelector("video")
+        if (video.paused) {
+            video.play()
+        } else {
+            video.pause()
+        }
+    }
+})
 
-/*
 
-Bonus
-
-Spusťte/pozastavte přehrávání, pokud uživatel na stránce zmáčkne klávesu mezerník.
-
-Všimněte si, že video se pozastavuje a přehrává, když uživatel píše do formuláře pro poznámku text a dělá u toho mezery. Spusťte/pozastavte přehrávání pouze v případě, že uživatel nebyl ve formuláři, když mačkal mezerník.
-
-if (
-event.code === 'Space' &&
-event.target.tagName !== 'TEXTAREA' &&
-event.target.tagName !== 'INPUT' &&
-event.target.tagName !== 'BUTTON'
-) {
-// …
-}
-
-Extra bonus
-Skryjte ovládací panel, pokud uživatel po dobu tří sekund nepohnul myší ani nestiskl žádnou klávesu. Využijte časovač. S každým pohnutím nebo stiskem ho zrušte a nastavte znovu na tři sekundy. Po uplynutí přidejte prvku .player-controls třídu hidden. Pro opětovné zobrazení (s každým pohybem, stiskem) třídu hidden zase odeberte, aby se ovládání zpět objevilo.
-*/
