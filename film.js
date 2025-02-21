@@ -230,7 +230,6 @@ document.querySelector("#note-form").addEventListener("submit", (e) => {
 
 //bod číslo 9 přehrávač
 
-document.querySelector("#prehravac").addEventListener("click", (e) => {
 	const video = document.querySelector("video")
 	const prehravac = document.querySelector("#prehravac")
 	const pauseButton = prehravac.querySelector(".pause")
@@ -261,7 +260,6 @@ document.querySelector("#prehravac").addEventListener("click", (e) => {
 
         currentTimeElement.textContent = formatedTime
 	})
-})
 
 document.addEventListener("keydown", (e) => {
     if (e.key === " " && !document.activeElement.matches("#message-input, textarea, input")) {
